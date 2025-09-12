@@ -57,7 +57,7 @@ app.get('/api/v1/tours/:id', (req, res) => {
 })
 
 //! patch data
-app.patch('/api/v1/tours/:id', (req, res) => {
+app.delete('/api/v1/tours/:id', (req, res) => {
     const id = req.params.id * 1;
     const tour = tours.find(el => el.id === id)
 
@@ -67,19 +67,25 @@ app.patch('/api/v1/tours/:id', (req, res) => {
             message: 'Tour not Found'
         })
     }
-
-    Object.assign(tour, req.body)
-
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
-        res.status(200).json({
+    
+    res.status(204).json({
         status: 'success',
-        data: {
-            tour
-        }
+        data: null
     })
-    })
-
 })
+    // Object.assign(tour, req.body)
+
+
+    // fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+    //     res.status(200).json({
+    //     status: 'success',
+    //     data: {
+    //         tour
+    //     }
+    // })
+    // })
+
+// })
 
 
 const port = 3000;
