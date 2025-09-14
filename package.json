@@ -4,7 +4,8 @@
   "description": "learing node, express and mongoDb",
   "main": "app.js ",
   "scripts": {
-    "test": "nodemon server.js"
+    "start:dev": "nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,11 @@
   },
   "homepage": "https://github.com/seadadevo/Natours-API#readme",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "cross-env": "^10.0.0"
   }
 }
