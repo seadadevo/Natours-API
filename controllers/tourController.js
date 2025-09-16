@@ -1,7 +1,7 @@
 const Tour = require("../models/tourModel")
 
 
-exports.getAllTours =async (req, res) => {
+exports.getAllTours = async (req, res) => {
   try {
     const tours = await Tour.find()
     res.status(200).json({
@@ -54,7 +54,7 @@ try {
 } catch (err) {
   res.status(400).json({
     status: 'fail',
-    message: 'Invalid data sent'
+    message: err
   })
 }
 
@@ -83,10 +83,21 @@ exports.updateTour = async (req, res) => {
   
 };
 
-exports.deleteTour = (req, res) => {
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+exports.deleteTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndDelete(req.params.id)
+    if(tour){
+      res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+    }
+  } catch (err) {
+     res.status(400).json({
+    status: 'fail',
+    message: err
+  })
+  }
+  
 
 };
