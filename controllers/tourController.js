@@ -4,16 +4,29 @@ const Tour = require("../models/tourModel")
 exports.getAllTours = async (req, res) => {
   try { 
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
-    const queryObj = {...req.query} // {"duraion": 2 }
-    const excludeFields = ['page', 'sort', 'limit', 'fields']
+     // 1) Filtering
+     // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    const queryObj = { ...req.query }; // {"duration": 5, "sort": "-price"}
+    const excludeFields = ['page', 'sort', 'limit', 'fields'];
     excludeFields.forEach(el => delete queryObj[el]);
 
-    let querySting = JSON.stringify(queryObj)
-    querySting = querySting.replace(/\b(gte|gt|lte}lt)\b/g, match => `$${match}`)
-    const finalQueryObj = JSON.parse(querySting);
+    let queryString = JSON.stringify(queryObj);
+    queryString = queryString.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    const finalQueryObj = JSON.parse(queryString);
+    // Base query
+    let query = Tour.find(finalQueryObj)
+    // 2) Sorting
+    if(req.query.sort){
+      // if a client sent a more request like sort=price,ratingsAverage
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy)
+    } else {
+      // default sort
+      query = query.sort('-createdAt');
 
-    const query = await Tour.find(finalQueryObj)
+    }
     const tours = await query;
+
     res.status(200).json({
       status: 'success',
       requestedAt: req.requestTime,
