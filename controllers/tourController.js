@@ -2,8 +2,18 @@ const Tour = require("../models/tourModel")
 
 
 exports.getAllTours = async (req, res) => {
-  try {
-    const tours = await Tour.find()
+  try { 
+    // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    const queryObj = {...req.query} // {"duraion": 2 }
+    const excludeFields = ['page', 'sort', 'limit', 'fields']
+    excludeFields.forEach(el => delete queryObj[el]);
+
+    let querySting = JSON.stringify(queryObj)
+    querySting = querySting.replace(/\b(gte|gt|lte}lt)\b/g, match => `$${match}`)
+    const finalQueryObj = JSON.parse(querySting);
+
+    const query = await Tour.find(finalQueryObj)
+    const tours = await query;
     res.status(200).json({
       status: 'success',
       requestedAt: req.requestTime,
