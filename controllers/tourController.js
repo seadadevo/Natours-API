@@ -176,11 +176,11 @@ exports.getMonthlyPlan = async (req, res) => {
         }
       },
       {
-        $sort: { numToursStarts: -1}
+        $sort: { month: 1}
       },
       {
         $limit: 12
-      }
+      }   
 
       
     ]);
@@ -193,7 +193,7 @@ exports.getMonthlyPlan = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       status: 'fail',
-      message: err
+      message: error
     });
   }
 }
