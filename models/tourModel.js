@@ -47,12 +47,16 @@ const tourSchema = new mongoose.Schema({
     required: [true, "tour must have a cover Image"]
   },
   images: [String],
-  craetedAt: {
+  createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
     select: false
   },
-  startDates: [Date]
+  startDates: [Date],
+  secretTour:{ 
+    type: Boolean,
+    default: false 
+  },
 },
   {
     toJSON: {virtuals: true},
@@ -70,7 +74,7 @@ tourSchema.pre('save', function(next){
   next()
 })
 
-tourSchema.pre('save', function() {
+tourSchema.pre('save', function(next) {
   console.log('Will save document')
   next()
 })
@@ -79,6 +83,17 @@ tourSchema.post('save', function(doc, next){
   console.log(doc)
   next()
 } )
+
+
+tourSchema.pre(/^find/ , function(next){
+  this.find({secretTour: {$ne : true}})  
+  next()
+})
+
+tourSchema.post(/^find/ , function(docs, next){
+  console.log(`Query took ${Date.now() - this.start} milliseconds`)
+  next()
+})
 
 const Tour = mongoose.model('Tour', tourSchema);
 
