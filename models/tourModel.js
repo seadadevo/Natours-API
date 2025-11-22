@@ -105,6 +105,7 @@ tourSchema.post('save', function(doc, next){
 
 
 tourSchema.pre(/^find/ , function(next){
+  this.start = Date.now();
   this.find({secretTour: {$ne : true}})  
   next()
 })
